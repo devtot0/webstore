@@ -15,22 +15,20 @@ const HomeScreen = () => {
   //part of the state that could be sent down
   const { loading, error, products } = productList;
 
-
-
   //makes a request to backend to request products
   useEffect(() => {
     dispatch(listProducts());
   }, [dispatch]);
 
-  const products = [];
+  //const products = [];
 
   return (
     <>
       <h1>Latest Products</h1>
       {loading ? (
-        <Loader/>
+        <Loader />
       ) : error ? (
-        <Message variant='danger'>{error}</Message>
+        <Message variant="danger">{error}</Message>
       ) : (
         <Row>
           {products.map((product) => (
