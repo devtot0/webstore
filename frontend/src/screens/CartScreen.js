@@ -32,7 +32,11 @@ const CartScreen = ({ match, location, history }) => {
   }, [dispatch, productId, quantity]);
 
   const removeFromCartHandler = (id) => {
-      console.log('remove');
+    console.log("remove");
+  };
+
+  const checkoutHandler = () => {
+    history.push('/login?redirect=shipping');
   }
 
   return (
@@ -59,8 +63,12 @@ const CartScreen = ({ match, location, history }) => {
                   <Col md={2}>
                     <Form.Control
                       as="select"
-                      value={quantity}
-                      onChange={(e) => dispatch(addToCart(item.product, Number(e.target.value)))}
+                      value={item.quantity}
+                      onChange={(e) =>
+                        dispatch(
+                          addToCart(item.product, Number(e.target.value))
+                        )
+                      }
                     >
                       {
                         //loads the list of possible quantity in stock
@@ -74,9 +82,13 @@ const CartScreen = ({ match, location, history }) => {
                     </Form.Control>
                   </Col>
                   <Col md={2}>
-                      <Button type='button' variant='light' onClick={() => removeFromCartHandler(item.product)}>
-                          <i className='fas fa-trash'/>
-                      </Button>
+                    <Button
+                      type="button"
+                      variant="light"
+                      onClick={() => removeFromCartHandler(item.product)}
+                    >
+                      <i className="fas fa-trash" />
+                    </Button>
                   </Col>
                 </Row>
               </ListGroup.Item>
@@ -84,8 +96,38 @@ const CartScreen = ({ match, location, history }) => {
           </ListGroup>
         )}
       </Col>
-      <Col md={2}></Col>
-      <Col md={2}></Col>
+      <Col md={4}>
+        <Card>
+          <ListGroup variant="flush">
+            <ListGroup.Item>
+              <h2>
+                Subtotal (
+                {cartItems.reduce(
+                  (accumulator, item) => accumulator + item.quantity,
+                  0
+                )}
+                {""}) items
+              </h2>
+              $
+              {cartItems
+                .reduce(
+                  (accumulator, item) =>
+                    accumulator + item.quantity * item.price,
+                  0
+                )
+                .toFixed(2)}
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Button
+                type="button"
+                className="btn-block"
+                disabled={cartItems.length === 0}
+                onClick={checkoutHandler}
+              >Proceed To Checkout</Button>
+            </ListGroup.Item>
+          </ListGroup>
+        </Card>
+      </Col>
     </Row>
   );
 };
