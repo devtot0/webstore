@@ -6,6 +6,8 @@ import {
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
+  USER_DETAILS_SUCCESS,
+  USER_DETAILS_FAIL,
   USER_LOGOUT,
 } from "../constants/userConstants";
 
@@ -81,6 +83,45 @@ export const register = (name, email, password) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+//if we won't to get profile, we will get it by id
+//getState for fetching a token
+export const getUserDetails = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_REGISTER_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    //content-type has to be specified
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    //getting data from userController passed as payload and saved in local storage
+    const { data } = await axios.get(
+      `/api/users/${id}`,
+      config
+    );
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
+      payload: data,
+    });
+
+  } catch (error) {
+    dispatch({
+      type: USER_DETAILS_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
