@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import { authUser, registerUser, getUserProfile } from '../controllers/userController.js';
+import { authUser, registerUser, getUserProfile, updateUserProfile } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
 //route for user registration
@@ -11,7 +11,9 @@ router.post('/login', authUser);
 
 //GET request to get user profile
 //whenever we hit this route, the protect middeware runs
-router.route('/profile').get(getUserProfile);
+//POST request when the user profile is updated
+router.route('/profile').get(getUserProfile).put(protect, updateUserProfile);
+
 
 
 export default router;
