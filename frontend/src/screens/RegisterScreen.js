@@ -22,6 +22,10 @@ const RegisterScreen = ({ location, history }) => {
 
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
+  const goToLoginScreen = () => {
+    history.goBack();
+  }
+
   useEffect(() => {
     if (userInfo) {
       history.push(redirect);
@@ -34,6 +38,7 @@ const RegisterScreen = ({ location, history }) => {
     if(password !== confirmPassword){
         setMessage('Passwords do not match');
     } else {
+        goToLoginScreen();
         dispatch(register(name, email, password));
     }
   };
