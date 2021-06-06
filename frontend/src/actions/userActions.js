@@ -234,7 +234,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
     };
     //getting data from userController passed as payload and saved in local storage
     //we make a request to the backed
-    const { data } = await axios.get(`/api/users/${id}`, config);
+    await axios.get(`/api/users/${id}`, config);
     dispatch({
       type: USER_DELETE_SUCCESS,
     });
