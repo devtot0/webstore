@@ -12,6 +12,7 @@ import {
   userDetailsReducer,
   userUpdateProfileReducer,
   userListReducer,
+  userDeleteReducer
 } from "./reducers/userReducers";
 import {
   orderCreateReducer,
@@ -33,6 +34,7 @@ const reducer = combineReducers({
   orderPay: orderPayReducer,
   listMyOrders: listMyOrdersReducer,
   userList: userListReducer,
+  userDelete: userDeleteReducer,
 });
 
 //no cart items -> return an empty array

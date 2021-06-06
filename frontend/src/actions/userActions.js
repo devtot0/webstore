@@ -18,6 +18,9 @@ import {
   USER_LIST_SUCCESS,
   USER_LIST_FAIL,
   USER_LIST_RESET,
+  USER_DELETE_REQUEST,
+  USER_DELETE_SUCCESS,
+  USER_DELETE_FAIL,
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -194,7 +197,7 @@ export const listUsers = () => async (dispatch, getState) => {
     };
     //getting data from userController passed as payload and saved in local storage
     //we make a request to the backed
-    const { data } = await axios.get(`/api/users/profile`, config);
+    const { data } = await axios.delete(`/api/users/profile`, config);
     dispatch({
       type: USER_LIST_SUCCESS,
       payload: data,
@@ -202,6 +205,42 @@ export const listUsers = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+
+//an action for listing users - GET request from axios
+export const deleteUser = (id) => async (dispatch, getState) => {
+  try {
+    //dispatching the request
+    dispatch({
+      type: USER_DELETE_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    //getting the token
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    //getting data from userController passed as payload and saved in local storage
+    //we make a request to the backed
+    const { data } = await axios.get(`/api/users/${id}`, config);
+    dispatch({
+      type: USER_DELETE_SUCCESS,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_DELETE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

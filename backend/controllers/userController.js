@@ -118,5 +118,21 @@ const getUsers = asyncHandler(async (req, res) => {
   res.json();
 });
 
+//Delete user
+//DELETE /api/users/:id
+//private/admin
+const deleteUser = asyncHandler(async (req, res) => {
+  //empty object because we want to get all users
+  //find by Id is a mongoose method
+  const user = await User.findById(req.params.id);
+  if (user) {
+    await user.remove();
+    res.json({ message: "User removed" });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+  res.json();
+});
 
-export { authUser, registerUser, getUserProfile, updateUserProfile, getUsers };
+export { authUser, registerUser, getUserProfile, updateUserProfile, getUsers, deleteUser };

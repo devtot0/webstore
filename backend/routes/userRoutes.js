@@ -6,6 +6,7 @@ import {
   getUserProfile,
   updateUserProfile,
   getUsers,
+  deleteUser,
 } from "../controllers/userController.js";
 import { protect, isAdmin } from "../middleware/authMiddleware.js";
 
@@ -19,5 +20,7 @@ router.post("/login", authUser);
 //whenever we hit this route, the protect middeware runs
 //POST request when the user profile is updated
 router.route("/profile").get(getUserProfile).put(protect, updateUserProfile);
+
+router.route("/:id").delete(protect, isAdmin, deleteUser);
 
 export default router;
