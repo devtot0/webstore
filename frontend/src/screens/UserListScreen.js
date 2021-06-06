@@ -6,19 +6,27 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { listUsers } from "../actions/userActions";
 
-const UserListScreen = () => {
+const UserListScreen = ({ history }) => {
   const dispatch = useDispatch();
   //connection with store.js ? bringing the reducer in
   const userList = useSelector((state) => state.userList);
   const { loading, error, users } = userList;
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   useEffect(() => {
+    if (userInfo && userInfo.isAdmin) {
+      //if user is an admin, he is allowed to list all the users
+      dispatch(listUsers());
+    } else {
+      //redirecting user who is not an admin
+      history.pushState("/login");
+    }
     dispatch(listUsers());
-  }, [dispatch]);
+  }, [dispatch, history]);
 
-  const deleteHandler = (id) => {
-
-  }
+  const deleteHandler = (id) => {};
 
   return (
     <>
@@ -55,14 +63,18 @@ const UserListScreen = () => {
                 </td>
 
                 <td>
-                    <LinkContainer to={`/user/${user._id}/edit`}>
-                        <Button variant="light" className="btn-sm">
-                            <i className="fas fa-edit"></i>
-                        </Button>
-                    </LinkContainer>
-                    <Button variant="danger" className="btn-sm" onClick={() => deleteHandler(user._id)}>
-                        <i className="fas fa-trash"></i>
+                  <LinkContainer to={`/user/${user._id}/edit`}>
+                    <Button variant="light" className="btn-sm">
+                      <i className="fas fa-edit"></i>
                     </Button>
+                  </LinkContainer>
+                  <Button
+                    variant="danger"
+                    className="btn-sm"
+                    onClick={() => deleteHandler(user._id)}
+                  >
+                    <i className="fas fa-trash"></i>
+                  </Button>
                 </td>
               </tr>
             ))}
