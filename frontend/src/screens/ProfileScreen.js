@@ -45,7 +45,7 @@ const ProfileScreen = ({ location, history }) => {
         setConfirmPassword(user.email);
       }
     }
-  }, [dispatch, history, userInfo, user]);
+  }, [dispatch, history, userInfo, user, listMyOrders]);
 
   const submitHandler = (e) => {
     e.preventDefault();

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ORDER_LIST_MY_RESET } from '../constants/orderConstants';
+import { ORDER_LIST_MY_RESET } from "../constants/orderConstants";
 import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -21,6 +21,9 @@ import {
   USER_DELETE_REQUEST,
   USER_DELETE_SUCCESS,
   USER_DELETE_FAIL,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_FAIL,
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -213,8 +216,7 @@ export const listUsers = () => async (dispatch, getState) => {
   }
 };
 
-
-//an action for listing users - GET request from axios
+//an action for deleting users - DELETE request from axios
 export const deleteUser = (id) => async (dispatch, getState) => {
   try {
     //dispatching the request
@@ -234,13 +236,53 @@ export const deleteUser = (id) => async (dispatch, getState) => {
     };
     //getting data from userController passed as payload and saved in local storage
     //we make a request to the backed
-    await axios.get(`/api/users/${id}`, config);
+    await axios.delete(`/api/users/${id}`, config);
     dispatch({
       type: USER_DELETE_SUCCESS,
     });
   } catch (error) {
     dispatch({
       type: USER_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+//an action for listing users - PUT request from axios
+export const updateUser = (user) => async (dispatch, getState) => {
+  try {
+    //dispatching the request
+    dispatch({
+      type: USER_UPDATE_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    //getting the token
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.put(`/api/users/${user._id}`, config);
+    dispatch({
+      type: USER_UPDATE_SUCCESS,
+    });
+
+    dispatch({
+      type: USER_UPDATE_SUCCESS, payload: data,
+    });
+
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
