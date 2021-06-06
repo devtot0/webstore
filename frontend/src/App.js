@@ -14,7 +14,8 @@ import PaymentScreen from "./screens/PaymentScreen";
 import PlaceOrderScreen from "./screens/PlaceOrderScreen";
 import OrderScreen from "./screens/OrderScreen";
 import UserListScreen from "./screens/UserListScreen";
-import UserEditScreen from "./screens/UserEditScreen"
+import UserEditScreen from "./screens/UserEditScreen";
+import ProductListScreen from "./screens/ProductListScreen";
 
 const App = () => {
   return (
@@ -34,8 +35,9 @@ const App = () => {
           {/*? - id is optional*/}
           <Route path='/cart/:id?' component={CartScreen}/>
           {/*admin routes */}
-          <Route path='/admin/userList' component={UserListScreen}/>
+          <Route path='/admin/userlist' component={UserListScreen}/>
           <Route path='/admin/user/:id' component={UserEditScreen}/>
+          <Route path='/admin/product' component={ProductListScreen}/>
         </Container>
       </main>
       <Footer />
