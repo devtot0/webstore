@@ -42,7 +42,7 @@ const reducer = combineReducers({
   userUpdate: userUpdateReducer,
   productDelete: productDeleteReducer,
   productCreate: productCreateReducer,
-  productUpdate: productCreateUpdate,
+  productUpdate: productUpdateReducer,
 });
 
 //no cart items -> return an empty array
