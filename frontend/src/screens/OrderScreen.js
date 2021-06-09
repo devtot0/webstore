@@ -13,7 +13,7 @@ import {
 } from "../actions/orderActions";
 import { ORDER_PAY_RESET } from "../constants/orderConstants";
 
-const OrderScreen = ({ match }) => {
+const OrderScreen = ({ match, history }) => {
   const orderId = match.params.id;
   const dispatch = useDispatch();
 
@@ -45,6 +45,10 @@ const OrderScreen = ({ match }) => {
   }
 
   useEffect(() => {
+    //making sure user is logged in
+    if(!userInfo){
+      history.push("/login");
+    }
     const addPayPalScript = async () => {
       const { data: clientId } = await axios.get("api/config/paypal");
       const script = document.createElement("script");
@@ -210,13 +214,13 @@ const OrderScreen = ({ match }) => {
                 </ListGroup.Item>
               )}
               {loadingDeliver && <Loader />}
-              {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+              {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
                 <ListGroup.Item>
                   <Button
                     type="button"
                     className="btn btn-block"
                     onClick={deliverHandler}
-                  ></Button>
+                  >Mark as Delivered</Button>
                 </ListGroup.Item>
               )}
             </ListGroup>
