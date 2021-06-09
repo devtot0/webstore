@@ -5,12 +5,13 @@ import {
   getOrderById,
   updateOrderToPaid,
   getMyOrders,
+  getOrders,
 } from "../controllers/orderController.js";
-import { protect } from "../middleware/authMiddleware.js";
+import { isAdmin, protect } from "../middleware/authMiddleware.js";
 //controller is bind to the route
 
 //route for user registration
-router.route("/").post(protect, addOrderItems);
+router.route("/").post(protect, addOrderItems).get(protect, isAdmin, getOrderById);
 
 router.route("/:id").get(protect, getOrderById);
 
