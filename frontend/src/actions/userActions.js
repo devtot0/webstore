@@ -147,38 +147,47 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
 //sending token is required - useState hook has to be passed
 export const updateUserProfile = (user) => async (dispatch, getState) => {
   try {
-    //dispatching the request
     dispatch({
       type: USER_UPDATE_PROFILE_REQUEST,
-    });
+    })
 
     const {
       userLogin: { userInfo },
     } = getState();
-    //content-type has to be specified
+
     const config = {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    //getting data from userController passed as payload and saved in local storage
-    //we make a request to the backed
+
     const { data } = await axios.put(`/api/users/profile`, user, config);
+
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,
       payload: data,
     });
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: data,
+    });
+    localStorage.setItem('userInfo', JSON.stringify(data));
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    if (message === 'Not authorized, token failed') {
+      dispatch(logout());
+    }
     dispatch({
       type: USER_UPDATE_PROFILE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: message,
     });
   }
-};
+}
+
 
 //an action for listing users - GET request from axios
 export const listUsers = () => async (dispatch, getState) => {

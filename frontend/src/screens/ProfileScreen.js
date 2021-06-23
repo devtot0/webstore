@@ -7,6 +7,7 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { getUserDetails, updateUserProfile } from "../actions/userActions";
 import { listMyOrders } from "../actions/orderActions";
+import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants';
 
 const ProfileScreen = ({ location, history }) => {
   const [name, setName] = useState("");
@@ -33,19 +34,18 @@ const ProfileScreen = ({ location, history }) => {
 
   useEffect(() => {
     if (!userInfo) {
-      history.push("/login");
+      history.push('/login');
     } else {
-      if (!userInfo.name) {
-        //profile, because we actually wanna get the logged in user
-        dispatch(getUserDetails("profile"));
+      if (!user || !user.name || success) {
+        dispatch({ type: USER_UPDATE_PROFILE_RESET });
+        dispatch(getUserDetails('profile'));
         dispatch(listMyOrders());
       } else {
-        //if we actually have the user
-        setName(user.email);
-        setConfirmPassword(user.email);
+        setName(user.name);
+        setEmail(user.email);
       }
     }
-  }, [dispatch, history, userInfo, user, listMyOrders]);
+  }, [dispatch, history, userInfo, user, success, listMyOrders]);
 
   const submitHandler = (e) => {
     e.preventDefault();
